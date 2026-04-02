@@ -117,16 +117,27 @@ Source: ${data.source.document_name} (${data.source.url})
                   </div>
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
                 <a 
                   href={data.university_metadata.official_website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-black text-sm flex items-center gap-2 hover:bg-indigo-50 transition-all shadow-xl shadow-indigo-900/20 active:scale-95"
+                  className="w-full sm:w-auto bg-white text-indigo-600 px-6 py-3 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-xl shadow-indigo-900/20 active:scale-95"
                 >
                   <Globe className="w-4 h-4" />
                   Official Website
                 </a>
+                {data.university_metadata.admission_page && (
+                  <a 
+                    href={data.university_metadata.admission_page}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto bg-indigo-500 text-white px-6 py-3 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-indigo-400 transition-all shadow-xl shadow-indigo-900/20 active:scale-95"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Admission Page
+                  </a>
+                )}
               </div>
             </div>
           </section>

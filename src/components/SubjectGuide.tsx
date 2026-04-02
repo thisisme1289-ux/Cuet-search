@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Book, Languages, GraduationCap, Info, X } from "lucide-react";
+import { Book, Languages, GraduationCap, Info, X, Sparkles, CheckCircle2 } from "lucide-react";
 
 interface SubjectGuideProps {
   onClose: () => void;
@@ -83,7 +83,7 @@ const SubjectGuide: React.FC<SubjectGuideProps> = ({ onClose }) => {
                   "Accountancy", "Biology", "Business Studies", "Chemistry", "Computer Science", 
                   "Economics", "Geography", "History", "Home Science", "Legal Studies", 
                   "Mathematics", "Physics", "Political Science", "Psychology", "Sociology",
-                  "Anthropology", "Environmental Studies", "Sanskrit (Core)"
+                  "Anthropology", "Environmental Studies", "Sanskrit"
                 ].map(sub => (
                   <div key={sub} className="flex items-center gap-2 px-2 py-1 bg-white border border-indigo-100 rounded-lg text-[10px] font-medium text-indigo-700">
                     <div className="w-1 h-1 rounded-full bg-indigo-400" />
@@ -116,6 +116,24 @@ const SubjectGuide: React.FC<SubjectGuideProps> = ({ onClose }) => {
                     {sub}
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Section III */}
+          <section>
+            <div className="flex items-center gap-2 mb-3 text-indigo-600">
+              <Sparkles className="w-5 h-5" />
+              <h3 className="font-black text-sm uppercase tracking-widest">Section III: General Test (GAT)</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+              The General Test (GAT) covers General Knowledge, Current Affairs, General Mental Ability, Numerical Ability, and Quantitative Reasoning. Many vocational and interdisciplinary courses require this.
+            </p>
+            <div className="bg-green-50/50 border border-green-100 rounded-2xl p-4">
+              <p className="text-xs font-bold text-green-600 mb-2 uppercase tracking-tighter">General Test (GAT)</p>
+              <div className="flex items-center gap-2 px-3 py-2 bg-white border border-green-100 rounded-xl text-xs font-bold text-green-700">
+                <CheckCircle2 className="w-4 h-4" />
+                General Test (GAT)
               </div>
             </div>
           </section>

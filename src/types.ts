@@ -27,6 +27,7 @@ export interface UniversityMetadata {
   type: string;
   description: string;
   official_website: string;
+  admission_page?: string;
   location: string;
 }
 

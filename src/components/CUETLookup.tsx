@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Search, Loader2, Info, GraduationCap, History, Sparkles, Filter, Calendar, Building2, LayoutGrid, BookOpenCheck } from "lucide-react";
 import EligibilityCard from "./EligibilityCard";
 import SubjectGuide from "./SubjectGuide";
+import PersonalizedFinder from "./PersonalizedFinder";
 import { CUETEligibilityData } from "../types";
 
 const POPULAR_SEARCHES = [
@@ -18,14 +19,150 @@ const ACADEMIC_YEARS = ["2026-27", "2025-26"];
 const UNIVERSITY_TYPES = ["All", "Central", "State", "Private", "Deemed"];
 const PROGRAM_CATEGORIES = ["All", "Engineering", "Arts", "Science", "Commerce", "Law", "Management", "Vocational"];
 
+const COMMON_UNIVERSITIES = [
+  "University of Delhi (DU)",
+  "Banaras Hindu University (BHU)",
+  "Jawaharlal Nehru University (JNU)",
+  "Jamia Millia Islamia (JMI)",
+  "Aligarh Muslim University (AMU)",
+  "University of Hyderabad",
+  "Visva-Bharati University",
+  "Pondicherry University",
+  "Central University of Rajasthan",
+  "Central University of Haryana",
+  "Central University of Punjab",
+  "Central University of South Bihar",
+  "Central University of Karnataka",
+  "Central University of Tamil Nadu",
+  "Central University of Kerala",
+  "Central University of Gujarat",
+  "Central University of Jharkhand",
+  "Central University of Odisha",
+  "Central University of Himachal Pradesh",
+  "Central University of Jammu",
+  "Central University of Kashmir",
+  "Tezpur University",
+  "Mizoram University",
+  "Nagaland University",
+  "North-Eastern Hill University (NEHU)",
+  "Babasaheb Bhimrao Ambedkar University (BBAU)",
+  "Indira Gandhi National Tribal University",
+  "Dr. B.R. Ambedkar University Delhi",
+  "Guru Ghasidas Vishwavidyalaya",
+  "Hemvati Nandan Bahuguna Garhwal University",
+  "Manipur University",
+  "Sikkim University",
+  "Tripura University",
+  "Rajiv Gandhi University",
+  "Assam University",
+  "English and Foreign Languages University (EFLU)",
+  "Maulana Azad National Urdu University (MANUU)",
+  "National Sanskrit University",
+  "Shri Lal Bahadur Shastri National Sanskrit University",
+  "Central Sanskrit University",
+  "Barkatullah University",
+  "Devi Ahilya Vishwavidyalaya",
+  "Dr. A.P.J. Abdul Kalam Technical University (AKTU)",
+  "Madan Mohan Malaviya University of Technology (MMMUT)",
+  "University of Allahabad",
+  "IIM Rohtak (Five Year Integrated Programme in Management)",
+  "Tata Institute of Social Sciences (TISS)",
+  "Galgotias University",
+  "Amity University",
+  "Bennett University",
+  "BML Munjal University",
+  "GD Goenka University",
+  "IILM University",
+  "Jagannath University",
+  "K.R. Mangalam University",
+  "LPU (Lovely Professional University)",
+  "NIIT University",
+  "Presidency University",
+  "Shiv Nadar University",
+  "SRM University",
+  "Teerthanker Mahaveer University",
+];
+
+const COMMON_COURSES = [
+  "B.A. (Hons.) Political Science",
+  "B.A. (Hons.) Economics",
+  "B.A. (Hons.) History",
+  "B.A. (Hons.) English",
+  "B.A. (Hons.) Psychology",
+  "B.A. (Hons.) Sociology",
+  "B.A. (Hons.) Geography",
+  "B.A. (Hons.) Philosophy",
+  "B.A. (Hons.) Sanskrit",
+  "B.A. (Hons.) Hindi",
+  "B.A. (Hons.) Journalism",
+  "B.A. (Hons.) Multimedia and Mass Communication",
+  "B.A. (Hons.) Social Work",
+  "B.A. (Hons.) Music",
+  "B.A. (Hons.) French",
+  "B.A. (Hons.) German",
+  "B.A. (Hons.) Spanish",
+  "B.A. (Hons.) Italian",
+  "B.A. (Hons.) Japanese",
+  "B.A. (Hons.) Korean",
+  "B.A. (Hons.) Chinese",
+  "B.Com. (Hons.)",
+  "B.Com. (Pass)",
+  "B.Sc. (Hons.) Physics",
+  "B.Sc. (Hons.) Chemistry",
+  "B.Sc. (Hons.) Mathematics",
+  "B.Sc. (Hons.) Biology",
+  "B.Sc. (Hons.) Computer Science",
+  "B.Sc. (Hons.) Statistics",
+  "B.Sc. (Hons.) Anthropology",
+  "B.Sc. (Hons.) Botany",
+  "B.Sc. (Hons.) Zoology",
+  "B.Sc. (Hons.) Geology",
+  "B.Sc. (Hons.) Home Science",
+  "B.Sc. (Hons.) Instrumentation",
+  "B.Sc. (Hons.) Polymer Science",
+  "B.Sc. (Hons.) Electronics",
+  "B.Tech. Computer Science & Engineering",
+  "B.Tech. Electronics & Communication",
+  "B.Tech. Mechanical Engineering",
+  "B.Tech. Civil Engineering",
+  "B.Tech. Information Technology",
+  "B.Tech. Biotechnology",
+  "B.Tech. Food Technology",
+  "B.A. LL.B. (Hons.)",
+  "B.B.A. LL.B. (Hons.)",
+  "B.B.A. (Bachelor of Business Administration)",
+  "B.M.S. (Bachelor of Management Studies)",
+  "B.B.E. (Bachelor of Business Economics)",
+  "B.Voc. (Software Development)",
+  "B.Voc. (Retail Management)",
+  "B.Voc. (Web Designing)",
+  "B.Voc. (Banking & Finance)",
+  "B.Voc. (Health Care Management)",
+  "B.Voc. (Printing & Publishing)",
+  "B.P.Ed. (Bachelor of Physical Education)",
+  "B.El.Ed. (Bachelor of Elementary Education)",
+  "B.F.A. (Bachelor of Fine Arts)",
+  "B.Des. (Bachelor of Design)",
+  "Integrated M.Sc. Physics",
+  "Integrated M.Sc. Chemistry",
+  "Integrated M.Sc. Mathematics",
+  "Integrated B.A. B.Ed.",
+  "Integrated B.Sc. B.Ed.",
+];
+
 export default function CUETLookup() {
   const [courseName, setCourseName] = useState("");
   const [universityName, setUniversityName] = useState("");
   const [academicYear, setAcademicYear] = useState("2026-27");
   const [universityType, setUniversityType] = useState("All");
   const [programCategory, setProgramCategory] = useState("All");
+  const [activeTab, setActiveTab] = useState<"direct" | "personalized">("direct");
   const [showFilters, setShowFilters] = useState(false);
   const [showSubjectGuide, setShowSubjectGuide] = useState(false);
+  const [courseSuggestions, setCourseSuggestions] = useState<string[]>([]);
+  const [uniSuggestions, setUniSuggestions] = useState<string[]>([]);
+  const [showCourseSuggestions, setShowCourseSuggestions] = useState(false);
+  const [showUniSuggestions, setShowUniSuggestions] = useState(false);
   const [result, setResult] = useState<CUETEligibilityData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +184,32 @@ export default function CUETLookup() {
   useEffect(() => {
     localStorage.setItem("cuet_lookup_cache", JSON.stringify(cache));
   }, [cache]);
+
+  // Handle course suggestions
+  useEffect(() => {
+    if (courseName.trim().length > 1) {
+      const filtered = COMMON_COURSES.filter(c => 
+        c.toLowerCase().includes(courseName.toLowerCase())
+      ).slice(0, 5);
+      setCourseSuggestions(filtered);
+      setShowCourseSuggestions(filtered.length > 0);
+    } else {
+      setShowCourseSuggestions(false);
+    }
+  }, [courseName]);
+
+  // Handle university suggestions
+  useEffect(() => {
+    if (universityName.trim().length > 1) {
+      const filtered = COMMON_UNIVERSITIES.filter(u => 
+        u.toLowerCase().includes(universityName.toLowerCase())
+      ).slice(0, 5);
+      setUniSuggestions(filtered);
+      setShowUniSuggestions(filtered.length > 0);
+    } else {
+      setShowUniSuggestions(false);
+    }
+  }, [universityName]);
 
   const handleSearch = async () => {
     if (!courseName.trim() || !universityName.trim()) {
@@ -83,10 +246,10 @@ export default function CUETLookup() {
         Program Category: ${programCategory === "All" ? "Any" : programCategory}
 
         SEARCH INSTRUCTIONS:
-        1. Search for the official ${academicYear} Bulletin of Information (BOI) or prospectus PDF for this university
-        2. Search specifically for programme-specific eligibility of this exact course
-        3. Prioritize: official university website > NTA/CUET official site > educational portals
-        4. Look for the EXACT subject combination rules as written in official documents
+        1. Search for the official ${academicYear} Bulletin of Information (BOI) or prospectus PDF for this university.
+        2. Search specifically for programme-specific eligibility of this exact course.
+        3. CRITICAL: Prioritize official university domain URLs (.ac.in, .edu.in, .edu) over general educational portals (like Shiksha, Collegedunia, etc.).
+        4. Look for the EXACT subject combination rules as written in official documents.
         5. Categorize subjects into List A (Languages), List B1 (Academic Subjects), and List B2 (Vocational Subjects) if the university (like DU) uses this terminology.
         6. Verify that the university is a ${universityType === "All" ? "recognized" : universityType} university.
         7. Ensure the course falls under the ${programCategory === "All" ? "specified" : programCategory} category if applicable.
@@ -100,7 +263,7 @@ export default function CUETLookup() {
         - Total number of CUET subjects required
         - Class 12 minimum percentage (if mentioned)
         - Any special conditions or restrictions
-        - University Metadata: Type (Central, State, Private, Deemed), a 2-sentence description, official website URL, and its main campus location.
+        - University Metadata: Type (Central, State, Private, Deemed), a 2-sentence description, official website URL, official admission page URL, and its main campus location.
 
         RULES:
         - NEVER guess or infer — only use what official sources say
@@ -115,6 +278,7 @@ export default function CUETLookup() {
             "type": "",
             "description": "",
             "official_website": "",
+            "admission_page": "",
             "location": ""
           },
           "course": "${courseName}",
@@ -209,12 +373,36 @@ export default function CUETLookup() {
         </p>
       </motion.div>
 
-      {/* Search Box */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-100 mb-8"
-      >
+      {/* Tabs */}
+      <div className="flex justify-center mb-12 p-1 bg-gray-100 rounded-2xl max-w-md mx-auto">
+        <button 
+          onClick={() => setActiveTab("direct")}
+          className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${activeTab === "direct" ? 'bg-white text-indigo-600 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Direct Search
+        </button>
+        <button 
+          onClick={() => setActiveTab("personalized")}
+          className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${activeTab === "personalized" ? 'bg-white text-indigo-600 shadow-lg shadow-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Eligibility Finder
+        </button>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {activeTab === "direct" ? (
+          <motion.div 
+            key="direct"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+          >
+            {/* Search Box */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-100 mb-8"
+            >
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest">
             <Search className="w-4 h-4" />
@@ -245,8 +433,32 @@ export default function CUETLookup() {
               className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white rounded-2xl outline-none transition-all text-gray-900 font-medium"
               value={courseName}
               onChange={(e) => setCourseName(e.target.value)}
+              onBlur={() => setTimeout(() => setShowCourseSuggestions(false), 200)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
+            <AnimatePresence>
+              {showCourseSuggestions && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute z-50 left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden"
+                >
+                  {courseSuggestions.map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setCourseName(s);
+                        setShowCourseSuggestions(false);
+                      }}
+                      className="w-full px-6 py-3 text-left text-sm font-bold text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all border-b border-gray-50 last:border-0"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -256,8 +468,32 @@ export default function CUETLookup() {
               className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white rounded-2xl outline-none transition-all text-gray-900 font-medium"
               value={universityName}
               onChange={(e) => setUniversityName(e.target.value)}
+              onBlur={() => setTimeout(() => setShowUniSuggestions(false), 200)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
+            <AnimatePresence>
+              {showUniSuggestions && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute z-50 left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden"
+                >
+                  {uniSuggestions.map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setUniversityName(s);
+                        setShowUniSuggestions(false);
+                      }}
+                      className="w-full px-6 py-3 text-left text-sm font-bold text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all border-b border-gray-50 last:border-0"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -418,16 +654,28 @@ export default function CUETLookup() {
         </motion.div>
       )}
 
-      {/* Results */}
-      <AnimatePresence mode="wait">
-        {result && (
-          <EligibilityCard 
-            key={`${result.course}-${result.university}`}
-            data={result} 
-            fromCache={!!cache[`${result.course.trim()}__${result.university.trim()}__${academicYear}__${universityType}__${programCategory}`.toLowerCase()]}
-          />
-        )}
-      </AnimatePresence>
+        {/* Results */}
+        <AnimatePresence mode="wait">
+          {result && (
+            <EligibilityCard 
+              key={`${result.course}-${result.university}`}
+              data={result} 
+              fromCache={!!cache[`${result.course.trim()}__${result.university.trim()}__${academicYear}__${universityType}__${programCategory}`.toLowerCase()]}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
+    ) : (
+      <motion.div 
+        key="personalized"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+      >
+        <PersonalizedFinder />
+      </motion.div>
+    )}
+  </AnimatePresence>
 
       {/* Subject Guide Modal */}
       <AnimatePresence>
